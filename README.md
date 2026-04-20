@@ -1,43 +1,76 @@
-Asymmetric Encryption
-RSA its Uses public and private key
+# 🔐 Node.js Cryptography Guide: RSA, AES, & Bcrypt
 
-1. generateKeys Function
-   This is a custom function that executes generateKeyPairSync, a built-in method from the Node.js node:crypto module. Its job is to create a mathematically linked pair of keys one for locking and one for unlocking.
-2. Encryption Function
-   This function take two parameter publicket and plaintext in here the publickey is uses to encrypt the plain text and return it
-3. decrypt function
-   takes two parameter a private key to decrypt the encrytedtext and encryptedBuffer the one to decrypt
+This guide breaks down three core cryptographic concepts: Asymmetric Encryption, Symmetric Encryption, and Password Hashing, along with how their functions work in a Node.js environment.
 
-sample uses first is generate the public and private key
-next is load the data then use the Encryption function we made to encrypt it provide the parameter key and the data
-console log them to be visible what a encrypted looks like and decrypted it by using the decrypt function we made by providing the private key and the encrypted data
+---
 
-Symmetric Encryption
-AES its Uses a single master key
+## 🎭 Asymmetric Encryption (RSA)
 
-    1.generateKey Setup
-This is where we uses randomBytes, a built-in method from the Node.js node: crypto module. Its job is to create one single secret master key used for both locking and unlocking the data.
+**Concept:** Uses a mathematically linked pair of keys—a **Public Key** (for locking) and a **Private Key** (for unlocking).
 
-2.encryptAES Function
-This function take two parameter secretKey and plaintext in here the secretKey is uses to encrypt the plain text and return it (it also creates a random IV or starting point to make the lock stronger)
-3.decryptAES function
-takes two parameter a secret key to decrypt the encrytedtext and encryptedData the one to decrypt
+### Core Functions
 
-sample uses first is generate the secret master key
-next is load the data then use the encryptAES function we made to encrypt it provide the parameter key and the data
-console log them to be visible what a encryptAES looks like and decrypted it by using the decryptAES function we made by providing the secret key and the encrypted data
+1. **`generateKeys` Function**
+   This is a custom function that executes `generateKeyPairSync`, a built-in method from the Node.js `node:crypto` module. Its job is to create a mathematically linked pair of keys: one for locking and one for unlocking.
 
-Password Hashing
-Bcrypt its Uses a one-way grinder and a salt
+2. **Encryption Function**
+   This function takes two parameters: `publicKey` and `plainText`. Here, the public key is used to encrypt the plain text and return the locked data.
 
-1. hashPassword Function
-   This function takes two parameters: plainTextPassword and saltRounds. The plainTextPassword is the original text you want to secure, and the saltRounds tells the bcrypt module how many times to loop the math. This makes the grinding process intentionally slow to protect against hackers. The function automatically throws in random noise (the salt) and returns the scrambled fingerprint.
+3. **Decrypt Function**
+   This takes two parameters: a `privateKey` to decrypt the text, and the `encryptedBuffer` (the data you want to decrypt).
 
-2. verifyPassword Function
-   This function takes two parameters: a guessPassword to check against the system, and the savedHash to verify it with. It automatically reads the hidden salt inside the saved hash, grinds up the guess the exact same way, and returns true or false if they match perfectly.
+### Sample Workflow
 
-Sample Uses
-First is to define your salt cost factor (like 10) and load your original password data.
-Next is to use the hashPassword function we made to hash it, providing the password and salt as parameters.
-Console log the hashedPassword to make it visible what the secure, salted fingerprint looks like.
-Finally, verify it by using the verifyPassword function we made, providing the password guess and the hashed password, and console log the isSame result to see if they match!
+1. Generate the public and private keys.
+2. Load the data, then use the Encryption function to encrypt it (providing the `publicKey` and the data as parameters).
+3. `console.log` the result to visually see what encrypted data looks like.
+4. Decrypt the data using the Decrypt function by providing the `privateKey` and the encrypted data.
+
+---
+
+## 🤝 Symmetric Encryption (AES)
+
+**Concept:** Uses a **single master key** for both locking and unlocking the data.
+
+### Core Functions
+
+1. **`generateKey` Setup**
+   This is where we use `randomBytes`, a built-in method from the Node.js `node:crypto` module. Its job is to create one single secret master key used for both locking and unlocking the data.
+
+2. **`encryptAES` Function**
+   This function takes two parameters: `secretKey` and `plainText`. The secret key is used to encrypt the plain text and return it. _(Note: It also creates a random IV, or starting point, to make the lock stronger)._
+
+3. **`decryptAES` Function**
+   This takes two parameters: the `secretKey` and the `encryptedData` (the locked box) to decrypt it back into plain text.
+
+### Sample Workflow
+
+1. Generate the secret master key.
+2. Load the data, then use the `encryptAES` function to encrypt it (providing the `secretKey` and the data as parameters).
+3. `console.log` the result to visually see what the AES encrypted data looks like.
+4. Decrypt the data using the `decryptAES` function by providing the exact same `secretKey` and the encrypted data.
+
+---
+
+## 🥩 Password Hashing (Bcrypt)
+
+**Concept:** Uses a **one-way smart grinder** and a **salt** to securely store passwords. It cannot be decrypted.
+
+### Core Functions
+
+1. **`hashPassword` Function**
+   This function takes two parameters: `plainTextPassword` and `saltRounds`.
+   - The `plainTextPassword` is the original text you want to secure.
+   - The `saltRounds` tells the bcrypt module how many times to loop the math. This makes the grinding process intentionally slow to protect against hackers.
+
+   The function automatically throws in random noise (the salt) and returns the scrambled fingerprint.
+
+2. **`verifyPassword` Function**
+   This function takes two parameters: a `guessPassword` to check against the system, and the `savedHash` to verify it with. It automatically reads the hidden salt inside the saved hash, grinds up the guess the exact same way, and returns `true` or `false` if they match perfectly.
+
+### Sample Workflow
+
+1. Define your salt cost factor (e.g., `10`) and load your original password data.
+2. Use the `hashPassword` function to hash it, providing the password and salt as parameters.
+3. `console.log` the `hashedPassword` to see what the secure, salted fingerprint looks like.
+4. Finally, verify it using the `verifyPassword` function (providing the password guess and the hashed password), and `console.log` the `isSame` result to see if they match!
